@@ -18,7 +18,7 @@
 
     <title>Last Commit</title>
   </head>
-  <body data-bs-theme="dark" class="min-vh-80">
+  <body data-bs-theme="dark" class="min-vh-80" onload="getUsername()">
     <div class="container mt-5">
       <h1 class="mb-4">Last Commit Information</h1>
 
@@ -44,6 +44,19 @@
         <input type="text" class="form-control" id="username" required />
       </div>
 
+      <!-- Checkbox to save username to local storage -->
+      <div class="form-check mb-3">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="saveUsername"
+          onclick="saveUsername()"
+        />
+        <label class="form-check-label" for="saveUsername">
+          Save username to local storage
+        </label>
+      </div>
+
       <button class="btn btn-primary" onclick="fetchLastCommit()">
         Fetch Last Commit
       </button>
@@ -64,6 +77,16 @@
     </a>
 
     <script>
+      async function getUsername() {
+        const username = localStorage.getItem("githubUsername");
+
+        if (username) {
+          document.getElementById("username").value = username;
+        }
+
+        await fetchLastCommit();
+      }
+
       // Function to handle popular user selection
       function selectPopularUser() {
         const select = document.getElementById("popularUsers");
@@ -83,9 +106,13 @@
 
       // Function to fetch last commit information
       async function fetchLastCommit() {
-        saveUsername(); // Save username to local storage
+        const saveUsernameCheckbox =
+          document.getElementById("saveUsername").checked;
+        if (saveUsernameCheckbox) {
+          saveUsername();
+        }
 
-        const username = localStorage.getItem("githubUsername");
+        const username = document.getElementById("username").value;
         const apiUrl = `https://api.github.com/users/${username}/events/public`;
 
         try {
