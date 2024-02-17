@@ -18,9 +18,26 @@
 
     <title>Last Commit</title>
   </head>
-  <body>
+  <body data-bs-theme="dark" class="min-vh-80">
     <div class="container mt-5">
       <h1 class="mb-4">Last Commit Information</h1>
+
+      <div class="mb-3">
+        <label for="popularUsers" class="form-label">Popular Users:</label>
+        <select
+          class="form-control"
+          id="popularUsers"
+          onchange="selectPopularUser()"
+        >
+          <option value="">Select a popular user</option>
+          <option value="torvalds">torvalds</option>
+          <option value="yyx990803">yyx990803</option>
+          <option value="gaearon">gaearon</option>
+          <option value="ruanyf">ruanyf</option>
+          <option value="openai">openai</option>
+          <option value="bradtraversy">bradtraversy</option>
+        </select>
+      </div>
 
       <div class="mb-3">
         <label for="username" class="form-label">GitHub Username:</label>
@@ -37,7 +54,27 @@
       </div>
     </div>
 
+    <!-- GitHub link -->
+    <a
+      href="https://github.com/adnjoo/last-commit"
+      target="_blank"
+      class="position-fixed bottom-0 end-0 p-3"
+    >
+      <img src="./github.svg" alt="Fork me on GitHub" />
+    </a>
+
     <script>
+      // Function to handle popular user selection
+      function selectPopularUser() {
+        const select = document.getElementById("popularUsers");
+        const usernameInput = document.getElementById("username");
+
+        // Set the selected popular user as the input value
+        if (select.value) {
+          usernameInput.value = select.value;
+        }
+      }
+
       // Function to save username to local storage
       function saveUsername() {
         const username = document.getElementById("username").value;
@@ -64,8 +101,11 @@
             const hours = Math.floor(
               (timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
             );
+            const minutes = Math.floor(
+              (timeDiff % (1000 * 60 * 60)) / (1000 * 60)
+            );
 
-            const lastCommitInfo = `Last commit was ${days} days and ${hours} hours ago.`;
+            const lastCommitInfo = `Last commit was ${days} days, ${hours}, and ${minutes} minutes ago.`;
             document.getElementById("lastCommitInfo").textContent =
               lastCommitInfo;
           } else {
